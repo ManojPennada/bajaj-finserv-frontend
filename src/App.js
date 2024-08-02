@@ -13,7 +13,41 @@ import {
     ListItemText,
     OutlinedInput,
     Box,
+    Paper,
+    Alert,
 } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css'; // Import custom CSS file
+
+// Create a theme with custom colors and typography
+const theme = createTheme({
+    palette: {
+        primary: {
+            main: '#6200ea', // Custom primary color
+        },
+        secondary: {
+            main: '#03dac6', // Custom secondary color
+        },
+        background: {
+            paper: '#f5f5f5',
+        },
+        text: {
+            primary: '#212121',
+            secondary: '#757575',
+        },
+    },
+    typography: {
+        fontFamily: 'Roboto, Arial, sans-serif',
+        h4: {
+            fontWeight: 700,
+            color: '#6200ea',
+        },
+        body1: {
+            fontSize: '1rem',
+        },
+    },
+});
 
 const App = () => {
     const [jsonInput, setJsonInput] = useState('');
@@ -74,56 +108,70 @@ const App = () => {
     };
 
     return (
-        <Container maxWidth="sm">
-            <Typography variant="h4" gutterBottom>
-                Maddi Koushik - AP21110010582
-            </Typography>
-            <TextField
-                fullWidth
-                multiline
-                rows={4}
-                variant="outlined"
-                label="Enter JSON here"
-                value={jsonInput}
-                onChange={handleJsonChange}
-                error={!isValidJson}
-                helperText={!isValidJson ? 'Invalid JSON' : ''}
-            />
-            <Box mt={2}>
-                <Button variant="contained" color="primary" onClick={handleSubmit}>
-                    Submit
-                </Button>
-            </Box>
-            {error && <Typography color="error">{error}</Typography>}
-            {response && (
-                <Box mt={2}>
-                    <FormControl fullWidth variant="outlined">
-                        <InputLabel>Filter</InputLabel>
-                        <Select
-                            multiple
-                            value={selectedFilters}
-                            onChange={handleFilterChange}
-                            input={<OutlinedInput label="Filter" />}
-                            renderValue={(selected) => selected.join(', ')}
+        <ThemeProvider theme={theme}>
+            <Container className="custom-container" maxWidth="sm">
+                <Paper elevation={3} className="custom-paper">
+                    <Typography variant="h4" gutterBottom className="custom-title">
+                        Maddi Koushik - AP21110010582
+                    </Typography>
+                    <TextField
+                        fullWidth
+                        multiline
+                        rows={6}
+                        variant="outlined"
+                        label="Enter JSON here"
+                        value={jsonInput}
+                        onChange={handleJsonChange}
+                        error={!isValidJson}
+                        helperText={!isValidJson ? 'Invalid JSON' : ''}
+                        className="custom-textfield"
+                        style={{ backgroundColor: '#ffffff', borderRadius: '4px' }}
+                    />
+                    {!isValidJson && <Alert severity="error" style={{ marginTop: '10px' }}>Please enter a valid JSON!</Alert>}
+                    <Box mb={2}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleSubmit}
+                            className="custom-button"
+                            style={{ width: '100%', marginTop: '20px' }}
                         >
-                            <MenuItem value="Numbers">
-                                <Checkbox checked={selectedFilters.includes('Numbers')} />
-                                <ListItemText primary="Numbers" />
-                            </MenuItem>
-                            <MenuItem value="Alphabets">
-                                <Checkbox checked={selectedFilters.includes('Alphabets')} />
-                                <ListItemText primary="Alphabets" />
-                            </MenuItem>
-                            <MenuItem value="Highest alphabet">
-                                <Checkbox checked={selectedFilters.includes('Highest alphabet')} />
-                                <ListItemText primary="Highest alphabet" />
-                            </MenuItem>
-                        </Select>
-                    </FormControl>
-                    {renderFilteredResponse()}
-                </Box>
-            )}
-        </Container>
+                            Submit
+                        </Button>
+                    </Box>
+                    {error && <Typography color="error" className="custom-error">{error}</Typography>}
+                    {response && (
+                        <Box mt={2}>
+                            <FormControl fullWidth variant="outlined">
+                                <InputLabel>Filter</InputLabel>
+                                <Select
+                                    multiple
+                                    value={selectedFilters}
+                                    onChange={handleFilterChange}
+                                    input={<OutlinedInput label="Filter" />}
+                                    renderValue={(selected) => selected.join(', ')}
+                                    className="custom-select"
+                                >
+                                    <MenuItem value="Numbers">
+                                        <Checkbox checked={selectedFilters.includes('Numbers')} />
+                                        <ListItemText primary="Numbers" />
+                                    </MenuItem>
+                                    <MenuItem value="Alphabets">
+                                        <Checkbox checked={selectedFilters.includes('Alphabets')} />
+                                        <ListItemText primary="Alphabets" />
+                                    </MenuItem>
+                                    <MenuItem value="Highest alphabet">
+                                        <Checkbox checked={selectedFilters.includes('Highest alphabet')} />
+                                        <ListItemText primary="Highest alphabet" />
+                                    </MenuItem>
+                                </Select>
+                            </FormControl>
+                            {renderFilteredResponse()}
+                        </Box>
+                    )}
+                </Paper>
+            </Container>
+        </ThemeProvider>
     );
 };
 
